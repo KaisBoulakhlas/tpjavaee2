@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="./layout.xhtml">
+    <ui:define name="content">
+        <h2>#{index.hello}</h2>
+        <p:card>
+            <f:facet name="title">#{msg['example.userslist']}</f:facet>
+            <p:dataTable value="#{index.users}"
+                          var="user"
+                          sortBy="#{user.userName}">
+                <p:column headerText="#{msg['example.username']}">
+                    #{user}
+                </p:column>
+                <p:column headerText="#{msg['example.isuseractive']}">
+                    <p:selectBooleanCheckbox value="#{index.isUserActive(user)}" disabled="true"/>
+                </p:column>
+                <f:facet name="footer">
+                    <h:outputFormat value="#{msg['example.userscount']}"><f:param value="#{index.users.size()}"/></h:outputFormat>
+                </f:facet>
+            </p:dataTable>
+        </p:card>
+        <p:card>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="emailTo" value="#{msg['example.mailto']}"/>
+                    <p:inputText id="emailTo" value="#{index.emailTo}"
+                                 required="true" requiredMessage="#{msg['example.mailto.required']}"/>
+                    <p:spacer/>
+                    <p:commandButton action="#{index.sendMail}" value="#{msg['example.mailsendmail']}"
+                                     update="@form"
+                                     onstart="PF('dlgStatus').show();"
+                                     oncomplete="PF('dlgStatus').hide();"/>
+                </h:panelGrid>
+                <p:messages/>
+            </h:form>
+        </p:card>
+    </ui:define>
+</ui:composition>
+

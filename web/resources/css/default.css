@@ -1,0 +1,15 @@
+body {
+    font-size : small;
+}
+
+.ui-widget {
+    font-size: small !important;
+}
+
+.ui-panel-titlebar {
+    text-align: center;
+}
+
+.table-no-header thead {
+    display: none;
+}

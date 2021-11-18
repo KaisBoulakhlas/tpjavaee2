@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="/css/default.css"/>
+        <title>#{msg['app.title']}</title>
+    </h:head>
+    <h:body>
+        <p:confirmDialog global="true">
+            <p:commandButton value="Oui"
+                             type="button"
+                             styleClass="ui-confirmdialog-yes" 
+                             icon="fa fa-check"/>
+        </p:confirmDialog>
+        <p:dialog widgetVar="dlgStatus" modal="true" draggable="false"
+                  closable="false" resizable="false" showHeader="false">
+            <p:graphicImage name="/ajaxloadingbar.gif" />
+        </p:dialog>
+        <ui:insert name="content">&nbsp;</ui:insert>
+    </h:body>
+</html>
