@@ -10,7 +10,7 @@ import java.util.List;
 public class User extends GenericEntity {
 
     @Column(nullable = false, unique = true, length = 50)
-    private String userName;
+    private String email;
     @Column(columnDefinition = "TEXT")
     private String password;
     @Column(columnDefinition = "TEXT")
@@ -18,8 +18,8 @@ public class User extends GenericEntity {
 
     @ManyToMany
     @JoinTable(name = "SECURITY_USER_GROUP",
-            joinColumns = @JoinColumn(name = "username",
-                    referencedColumnName = "username"),
+            joinColumns = @JoinColumn(name = "email",
+                    referencedColumnName = "email"),
             inverseJoinColumns = @JoinColumn(name = "groupname",
                     referencedColumnName = "groupname"))
     private List<Group> groups;
@@ -27,19 +27,18 @@ public class User extends GenericEntity {
     public User() {
     }
 
-    public User(String userName, String password) {
-        this.userName = userName;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public User(String email, String password) {
+        this.email = email;
         this.password = password;
     }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -66,7 +65,7 @@ public class User extends GenericEntity {
 
     @Override
     public String toString() {
-        return userName;
+        return email;
     }
 
 }

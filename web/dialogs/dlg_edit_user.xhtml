@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dialog widgetVar="dlgEditUser"
+              closeOnEscape="true"
+              id="dlgEditUser"
+              modal="true"
+              header="Modifier mes informations">
+        <h:form>
+            <p:messages/>
+            <h:panelGrid  columns="2" cellpadding="10">
+                <h:outputLabel for="email" value="Adresse e-mail"/>
+                <p:inputText id="email"
+                             value="#{editUserDialog.instance.email}"
+                             required="true"
+                             requiredMessage="L'e-mail est obligatoire"
+                             validatorMessage="Le format de l'adresse e-mail est incorrect">
+                    <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                </p:inputText>
+                <h:outputLabel for="password" value="Mot de passe"/>
+                <p:password id="password"
+                            value="#{editUserDialog.instance.password}"
+                            match="repeat_password"
+                            rendered="true"
+                            requiredMessage="Le mot de passe est obligatoire"
+                            validatorMessage="Les mots de passes doivent être identiques"
+                            feedback="true"/>
+                <h:outputLabel for="repeat_password" value="Répétez le mot de passe"/>
+                <p:password id="repeat_password"
+                            rendered="true"
+                            requiredMessage="Veuillez répéter Le mot de passe"
+                            value="#{editUserDialog.instance.password}"/>
+                <p:spacer/>
+                <p:commandButton value="Modifier"
+                                 action="#{editUserDialog.save()}"
+                                 update="@form,toolbar"/>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</ui:composition>

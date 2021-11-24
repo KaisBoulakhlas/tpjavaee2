@@ -6,26 +6,25 @@
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
         <h:panelGrid columns="1" style="margin: 0 auto;">
-            <p:panel header="#{msg['app.loginform']}">
-                <h:form onsubmit="action = 'j_security_check';" 
+            <p:panel header="#{msg['app.registerform']}">
+                <h:form
                         prependId="false">
                     <p:messages/>
                     <h:panelGrid columns="2" cellpadding="5">
-                        <p:outputLabel for="j_username" value="#{msg['app.username']}"/>
-                        <p:inputText id="j_username"/>
-                        <h:outputLabel for="j_password" value="#{msg['app.password']}"/>
-                        <p:password id="j_password"/>
+                        <p:outputLabel for="register_email" value="#{msg['user_email']}"/>
+                        <p:inputText id="register_email"/>
+                        <h:outputLabel for="register_password" value="#{msg['app.password']}"/>
+                        <p:password id="register_password"/>
+                        <h:outputLabel for="repeat_password" value="#{msg['app.repeatpassword']}"/>
+                        <p:password id="repeat_password"/>
                         <p:spacer/>
-                        <p:commandButton value="#{msg['app.login']}"
+                        <p:commandButton value="#{msg['app.save']}"
                                          ajax="false"
+                                         action="#{register_user.registerUser}"
                                          icon="fa fa-sign-in"/>
                     </h:panelGrid>
-                    <p:linkButton outcome="signup">
-                        #{msg['app.registerform']}
-                    </p:linkButton>
                 </h:form>
             </p:panel>
         </h:panelGrid>
     </ui:define>
-
 </ui:composition>

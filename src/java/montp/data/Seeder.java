@@ -1,7 +1,9 @@
 package montp.data;
 
+import montp.data.model.Cotation;
 import montp.data.model.security.Group;
 import montp.data.model.security.User;
+import montp.services.CotationService;
 import montp.services.UserService;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +22,10 @@ public class Seeder {
     @Inject
     private UserService userService;
 
+    @Inject
+    private CotationService stockMarketClientService;
+
+
     @PersistenceContext
     private EntityManager em;
     
@@ -30,12 +36,12 @@ public class Seeder {
             em.persist(groupUser);
             Group groupAdmin = new Group("ADMIN");
             em.persist(groupAdmin);
-            User userUser1 = new User("user1", "user1");
+            User userUser1 = new User("user1@gmail.com", "user1");
             List<Group> groupes = new ArrayList<>();
             groupes.add(groupUser);
             userUser1.setGroups(groupes);
             userService.insert(userUser1);
-            User userAdmin = new User("admin", "admin");
+            User userAdmin = new User("admin@gmail.com", "admin");
             groupes.add(groupAdmin);
             userAdmin.setGroups(groupes);
             userService.insert(userAdmin);

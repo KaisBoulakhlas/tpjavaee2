@@ -17,8 +17,8 @@ public class UserService extends GenericService<User, UserDAO> {
         return dao.getUsers();
     }
 
-    public User getFromUsername(String username) {
-        return dao.getFromUsername(username.toLowerCase().trim());
+    public User getFromEmail(String email) {
+        return dao.getFromEmail(email.toLowerCase().trim());
     }
 
     public Group getGroup(String groupname) {
@@ -55,11 +55,11 @@ public class UserService extends GenericService<User, UserDAO> {
             user.setGroups(groupes);
         }
         user.setPassword(Tools.digestSHA256Hex(user.getPassword().trim()));
-        user.setUserName(user.getUserName().toLowerCase().trim());
+        user.setEmail(user.getEmail().toLowerCase().trim());
         super.insert(user);
     }
 
-    public boolean checkIfExists(String username) {
-        return getFromUsername(username) != null;
+    public boolean checkIfExists(String email) {
+        return getFromEmail(email) != null;
     }
 }

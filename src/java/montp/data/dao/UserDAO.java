@@ -18,13 +18,13 @@ public class UserDAO extends GenericDAO<User> {
 
     @SuppressWarnings("unchecked")
     public List<User> getUsers() {
-        return em.createQuery("SELECT u FROM User u ORDER BY u.userName")
+        return em.createQuery("SELECT u FROM User u ORDER BY u.email")
                 .getResultList();
     }
 
-    public User getFromUsername(String username) {
-        return (User) em.createQuery("SELECT u FROM User u WHERE u.userName=:username")
-                .setParameter("username", username)
+    public User getFromEmail(String email) {
+        return (User) em.createQuery("SELECT u FROM User u WHERE u.email=:email")
+                .setParameter("email", email)
                 .getSingleResult();
     }
 
@@ -35,17 +35,17 @@ public class UserDAO extends GenericDAO<User> {
     @Transactional
     public void update(User user) {
         User u = em.find(User.class, user.getId());
-        em.createNativeQuery("DELETE FROM SECURITY_USER_GROUP WHERE username=?1")
-                .setParameter(1, u.getUserName())
+        em.createNativeQuery("DELETE FROM SECURITY_USER_GROUP WHERE email=?1")
+                .setParameter(1, u.getEmail())
                 .executeUpdate();
-        u.setUserName(user.getUserName().toLowerCase().trim());
+        u.setEmail(user.getEmail().toLowerCase().trim());
         if ((user.getPassword() != null)
                 && (!user.getPassword().trim().isEmpty())) {
             u.setPassword(Tools.digestSHA256Hex(user.getPassword().trim()));
         }
         super.update(u);
-        em.createNativeQuery("INSERT INTO SECURITY_USER_GROUP(username,groupname) VALUES(?1,?2)")
-                .setParameter(1, u.getUserName())
+        em.createNativeQuery("INSERT INTO SECURITY_USER_GROUP(email,groupname) VALUES(?1,?2)")
+                .setParameter(1, u.getEmail())
                 .setParameter(2, "USER")
                 .executeUpdate();
     }

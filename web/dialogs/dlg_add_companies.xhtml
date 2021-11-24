@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+        <p:dialog widgetVar="dlgAddCompany"
+                  id="dlgAddCompany"
+                  header="#{msg['company_new']}"
+                  modal="true"
+                  closeOnEscape="true">
+            <h:form>
+                <h:panelGrid columns="1" cellpadding="5">
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:autoComplete value="#{addCompaniesDialog.company}"
+                                        completeMethod="#{addCompaniesDialog.companiesyByQuery}"
+                                        minQueryLength="2"
+                                        required="true"
+                                        requiredMessage="La société est obligatoire"
+                                        var="company"
+                                        forceSelection="true"
+                                        itemLabel="#{company.toString()}"
+                                        itemValue="#{company}"
+                                        size="80"
+                                        converter="company"
+                        />
+                        <p:commandButton icon="fa fa-plus"
+                                         action="#{addCompaniesDialog.add}"
+                                         update="@form"/>
+                    </h:panelGrid>
+                    <p:dataTable value="#{addCompaniesDialog.companies}"
+                                 emptyMessage=""
+                                 var="company"
+                                 style="width: 600px;">
+                        <p:column headerText="Symbole"
+                                  style="width: 200px;">
+                            <h:outputText value="#{company.symbol}"/>
+                        </p:column>
+                        <p:column headerText="Société">
+                            <h:outputText value="#{company.name}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="Ajouter au panier de cotations"
+                                     icon="fa fa-plus"
+                                     action="#{addCompaniesDialog.save()}"
+                                     update="@form,formDataTable:dataTable"
+                                     oncomplete="if (!args.validationFailed) PF('dlgAddCompany').hide()"
+                                     process="@this"
+                    />
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+</ui:composition>
+

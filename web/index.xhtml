@@ -1,42 +1,108 @@
-<?xml version='1.0' encoding='UTF-8' ?> 
+<?xml version='1.0' encoding='UTF-8' ?>
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:mestags="http://cotations/tags"
                 template="./layout.xhtml">
+    <style type="text/css">
+        .ui-panel, div.ui-state-hover {
+            margin: 10px;
+            width: 200px;
+        }
+
+        .ui-dashboard-column {
+            width: 220px;
+        }
+    </style>
     <ui:define name="content">
-        <h2>#{index.hello}</h2>
-        <p:card>
-            <f:facet name="title">#{msg['example.userslist']}</f:facet>
-            <p:dataTable value="#{index.users}"
-                          var="user"
-                          sortBy="#{user.userName}">
-                <p:column headerText="#{msg['example.username']}">
-                    #{user}
-                </p:column>
-                <p:column headerText="#{msg['example.isuseractive']}">
-                    <p:selectBooleanCheckbox value="#{index.isUserActive(user)}" disabled="true"/>
-                </p:column>
-                <f:facet name="footer">
-                    <h:outputFormat value="#{msg['example.userscount']}"><f:param value="#{index.users.size()}"/></h:outputFormat>
-                </f:facet>
-            </p:dataTable>
-        </p:card>
-        <p:card>
             <h:form>
-                <h:panelGrid columns="2">
-                    <p:outputLabel for="emailTo" value="#{msg['example.mailto']}"/>
-                    <p:inputText id="emailTo" value="#{index.emailTo}"
-                                 required="true" requiredMessage="#{msg['example.mailto.required']}"/>
-                    <p:spacer/>
-                    <p:commandButton action="#{index.sendMail}" value="#{msg['example.mailsendmail']}"
-                                     update="@form"
-                                     onstart="PF('dlgStatus').show();"
-                                     oncomplete="PF('dlgStatus').hide();"/>
-                </h:panelGrid>
-                <p:messages/>
+                <p:poll interval="5" update="formDataTable:dataTable" />
             </h:form>
-        </p:card>
+            <h:form>
+                <p:poll interval="5" update="cotation_moyenne" />
+            </h:form>
+            <div class="card">
+                    <p:toolbar id="toolbar">
+                        <p:toolbarGroup styleClass="p-mr">
+                            <p:commandButton icon="fa fa-plus"
+                                             actionListener="#{addCompaniesDialog.create(index)}"
+                                             update="dlgAddCompany"
+                                             oncomplete="PF('dlgAddCompany').show()"
+                                             style="margin-right: 10px;"
+                                             process="@this"/>
+                            <p:commandButton icon="fa fa-edit"
+                                             actionListener="#{editUserDialog.setInstance(userSession.user)}"
+                                             oncomplete="PF('dlgEditUser').show()"
+                                             update="dlgEditUser"
+                                             styleClass="p-mr-2"
+                                             process="@this"/>
+                        </p:toolbarGroup>
+
+                        <p:toolbarGroup align="right">
+                            <h2>#{index.hello}</h2>
+                            <mestags:connexioninfo/>
+                            <mestags:connexioninfo logout="true"/>
+                            <p:commandButton icon="fa fa-sign-out"
+                                             title="#{msg['app.logout']}"
+                                             action="#{userSession.logout()}"/>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+            </div>
+        <p:dashboard id="board" model="#{dashboardView.model}" style="padding-left:100px;padding-top:10px;">
+            <p:ajax event="reorder" listener="#{dashboardView.handleReorder}"/>
+
+            <p:panel id="cotation_moyenne" header="Cotation moyenne" style="margin-right:20px">
+                <h:outputText value="#{index.cotationAverage}€"/>
+            </p:panel>
+
+            <p:panel id="variation_moyenne" header="Variation moyenne" style="margin-right:20px;margin-top:20px;">
+                <h:outputText value="#{index.variationAverage}%"/>
+            </p:panel>
+
+            <p:panel id="dataTableDashboard" header="Cotations courantes" style="width:1000px">
+                    <h:form id="formDataTable">
+                        <f:facet name="title">#{msg['stockMarketClient.title']}</f:facet>
+                        <p:dataTable value="#{dtColumnsView.cotations}"
+                                     widgetVar="customersTable"
+                                     var="cotation"
+                                     id="dataTable"
+                                     filteredValue="#{dtColumnsView.filteredCotations}">
+                            <p:columns value="#{dtColumnsView.columns}" var="column" headerText="#{column.header}" field="#{column.property}">
+                            </p:columns>
+                            <p:column headerText="Cotation"
+                                      style="width:50px; text-align: right;">
+                                <h:outputText value="€#{index.getCurrentQuote(cotation.symbol)}">
+                                    <f:convertNumber type="currency" currencySymbol="€"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Variation"
+                                      style="width:50px; text-align: right;">
+                                <h:outputText value="#{index.getVariation(cotation.id)}%">
+                                    <f:convertNumber type="percent"
+                                                     minFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column style="width: 32px;">
+                                <p:commandButton icon="fa fa-trash"
+                                                 update="@form,formDataTable:dataTable"
+                                                 process="@this"
+                                                 id="delete"
+                                                 ajax="true"
+                                                 actionListener="#{index.delete(cotation)}">
+                                    <p:confirm header="Suppression d'une cotation"
+                                               icon="fa fa-question-circle"
+
+                                               message="Supprimer #{cotation.company} ?"/>
+                                    <f:ajax execute="delete" render="dataTable" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+            </p:panel>
+        </p:dashboard>
+
+        <ui:include src="dialogs/dlg_add_companies.xhtml"/>
+        <ui:include src="dialogs/dlg_edit_user.xhtml"/>
     </ui:define>
 </ui:composition>
-
