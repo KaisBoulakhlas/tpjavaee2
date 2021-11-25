@@ -35,8 +35,11 @@
                                              actionListener="#{editUserDialog.setInstance(userSession.user)}"
                                              oncomplete="PF('dlgEditUser').show()"
                                              update="dlgEditUser"
+                                             style="margin-right: 10px;"
                                              styleClass="p-mr-2"
                                              process="@this"/>
+                            <p:linkButton outcome="admin" icon="fa fa-gears"
+                                    rendered='#{request.isUserInRole("ADMIN")}'/>
                         </p:toolbarGroup>
 
                         <p:toolbarGroup align="right">
@@ -101,7 +104,6 @@
                     </h:form>
             </p:panel>
         </p:dashboard>
-
         <ui:include src="dialogs/dlg_add_companies.xhtml"/>
         <ui:include src="dialogs/dlg_edit_user.xhtml"/>
     </ui:define>

@@ -50,5 +50,9 @@ public class UserDAO extends GenericDAO<User> {
                 .executeUpdate();
     }
 
+    @Transactional
+    public void changeStatus(User user){
+        super.update(user);
+    }
 
 }
